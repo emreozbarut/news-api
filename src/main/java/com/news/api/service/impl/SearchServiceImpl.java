@@ -8,11 +8,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import com.news.api.client.GNewsClient;
 import com.news.api.enums.SearchAttributes;
+import com.news.api.exception.search.SearchException;
+import com.news.api.exception.search.SearchExceptionCode;
 import com.news.api.model.Article;
 import com.news.api.model.GNewsAPIResponse;
 import com.news.api.service.SearchService;
@@ -35,6 +38,10 @@ public class SearchServiceImpl implements SearchService
     @Cacheable(cacheNames = "searches_by_keyword", key = "#keyword")
     public GNewsAPIResponse searchByKeyword(String keyword)
     {
+        if (StringUtils.isBlank(keyword))
+        {
+            throw new SearchException(SearchExceptionCode.INVALID_KEYWORD.getCode(), "Keyword must be entered.", HttpStatus.BAD_REQUEST.value());
+        }
         return client.searchByKeyword(validateAndFixKeyword(keyword), apiKey).getBody();
     }
 
@@ -50,7 +57,11 @@ public class SearchServiceImpl implements SearchService
         {
             return filterArticlesBy(author);
         }
-        
+        else if (StringUtils.isBlank(author) && StringUtils.isBlank(title))
+        {
+            throw new SearchException(SearchExceptionCode.INVALID_SEARCH_REQUEST.getCode(), "Title or Author must be entered.", HttpStatus.BAD_REQUEST.value());
+        }
+
         GNewsAPIResponse response = client.searchArticlesWithAttributes(validateAndFixKeyword(title), attributes, apiKey).getBody();
         return filterArticlesByAuthor(author, response);
     }

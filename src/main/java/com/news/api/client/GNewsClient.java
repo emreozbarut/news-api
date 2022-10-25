@@ -12,7 +12,7 @@ import com.news.api.enums.SearchAttributes;
 import com.news.api.model.GNewsAPIResponse;
 
 @FeignClient(
-        value = "authServiceClient",
+        value = "gNewsClient",
         url = "${gnews.url}",
         configuration = FeignClientConfiguration.class
 )
