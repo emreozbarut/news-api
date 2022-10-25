@@ -33,12 +33,13 @@ public class SearchServiceTest
 {
     @InjectMocks
     private SearchServiceImpl searchService;
-    
+
     @Mock
     private GNewsClient client;
-    
+
     @Test
-    public void shouldSearchByKeyword() {
+    public void shouldSearchByKeyword()
+    {
         String template = "test";
         Article article = Article.builder()
                 .content(template)
@@ -48,20 +49,20 @@ public class SearchServiceTest
                 .title(template)
                 .source(Source.builder().name(template).url(template).build())
                 .build();
-        
+
         GNewsAPIResponse mockResponse = GNewsAPIResponse.builder()
                 .totalArticles(10)
                 .articles(Collections.singletonList(article))
                 .build();
-        
+
         when(client.searchByKeyword(anyString(), any())).thenReturn(ResponseEntity.of(Optional.of(mockResponse)));
-        
+
         GNewsAPIResponse response = searchService.searchByKeyword(template);
-        
+
         assertEquals(mockResponse.getTotalArticles(), response.getTotalArticles());
         assertEquals(mockResponse.getArticles().size(), response.getArticles().size());
     }
-    
+
     @Test
     public void shouldThrowSearchException_whenKeywordIsNull()
     {
@@ -75,7 +76,7 @@ public class SearchServiceTest
             assertEquals(HttpStatus.BAD_REQUEST.value(), se.getStatusCode());
         }
     }
-    
+
     @Test
     public void shouldSearchWithTitle_whenAuthorIsBlank()
     {
@@ -93,14 +94,15 @@ public class SearchServiceTest
                 .totalArticles(10)
                 .articles(Collections.singletonList(article))
                 .build();
-        
+
         when(client.searchArticlesWithAttributes(anyString(), anyList(), any())).thenReturn(ResponseEntity.of(Optional.of(mockResponse)));
-        
-        GNewsAPIResponse response = searchService.searchWith(template, null, Collections.singletonList(SearchAttributes.TITLE));
-        
+
+        GNewsAPIResponse response = searchService.searchWith(template, null,
+                Collections.singletonList(SearchAttributes.TITLE));
+
         assertEquals(mockResponse.getTotalArticles(), response.getTotalArticles());
         assertEquals(mockResponse.getArticles().size(), response.getArticles().size());
-        
+
         verify(client, times(1)).searchArticlesWithAttributes(anyString(), anyList(), any());
         verifyNoMoreInteractions(client);
     }
@@ -125,7 +127,8 @@ public class SearchServiceTest
 
         when(client.searchByKeyword(anyString(), any())).thenReturn(ResponseEntity.of(Optional.of(mockResponse)));
 
-        GNewsAPIResponse response = searchService.searchWith(null, template, Collections.singletonList(SearchAttributes.TITLE));
+        GNewsAPIResponse response = searchService.searchWith(null, template,
+                Collections.singletonList(SearchAttributes.TITLE));
 
         assertEquals(1, response.getTotalArticles());
         assertEquals(mockResponse.getArticles().size(), response.getArticles().size());
@@ -154,7 +157,8 @@ public class SearchServiceTest
 
         when(client.searchArticlesWithAttributes(anyString(), anyList(), any())).thenReturn(ResponseEntity.of(Optional.of(mockResponse)));
 
-        GNewsAPIResponse response = searchService.searchWith(template, null, Collections.singletonList(SearchAttributes.TITLE));
+        GNewsAPIResponse response = searchService.searchWith(template, null,
+                Collections.singletonList(SearchAttributes.TITLE));
 
         assertEquals(mockResponse.getTotalArticles(), response.getTotalArticles());
         assertEquals(mockResponse.getArticles().size(), response.getArticles().size());
@@ -162,7 +166,7 @@ public class SearchServiceTest
         verify(client, times(1)).searchArticlesWithAttributes(anyString(), anyList(), any());
         verifyNoMoreInteractions(client);
     }
-    
+
     @Test
     public void shouldThrowSearchException_whenTitleAndAuthorIsBlank()
     {

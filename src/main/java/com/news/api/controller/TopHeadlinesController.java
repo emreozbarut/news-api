@@ -17,9 +17,10 @@ import lombok.RequiredArgsConstructor;
 public class TopHeadlinesController
 {
     private final TopHeadlinesService service;
-    
+
     @GetMapping("/new/article")
-    public ResponseEntity<GNewsAPIResponse> fetchNewArticles(@RequestParam("max") Integer max) {
+    public ResponseEntity<GNewsAPIResponse> fetchNewArticles(@RequestParam("max") Integer max)
+    {
         return ResponseEntity.ok(service.fetchNewArticles(max));
     }
 }

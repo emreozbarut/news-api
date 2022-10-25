@@ -13,12 +13,14 @@ public class FeignClientConfiguration
     private static final boolean FOLLOW_REDIRECTS = false;
 
     @Bean
-    public FeignClientErrorDecoder portfolioServiceClientErrorDecoder() {
+    public FeignClientErrorDecoder portfolioServiceClientErrorDecoder()
+    {
         return new FeignClientErrorDecoder();
     }
 
     @Bean
-    public Request.Options options() {
+    public Request.Options options()
+    {
         return new Request.Options(
                 CONNECT_TIMEOUT_SECOND,
                 TimeUnit.SECONDS,

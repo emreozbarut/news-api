@@ -20,16 +20,18 @@ import lombok.RequiredArgsConstructor;
 public class SearchController
 {
     private final SearchService searchService;
-    
+
     @GetMapping
-    public ResponseEntity<GNewsAPIResponse> searchByKeyword(@RequestParam("q") String keyword) {
+    public ResponseEntity<GNewsAPIResponse> searchByKeyword(@RequestParam("q") String keyword)
+    {
         return ResponseEntity.ok(searchService.searchByKeyword(keyword));
     }
 
     @GetMapping("/article")
     public ResponseEntity<GNewsAPIResponse> fetchArticlesWith(@RequestParam(value = "title", required = false) String title,
                                                               @RequestParam(value = "author", required = false) String author,
-                                                              @RequestParam(value = "attributes", defaultValue = "TITLE") List<SearchAttributes> searchAttributes) {
+                                                              @RequestParam(value = "attributes", defaultValue = "TITLE") List<SearchAttributes> searchAttributes)
+    {
         return ResponseEntity.ok(searchService.searchWith(title, author, searchAttributes));
     }
 }
