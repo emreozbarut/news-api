@@ -8,3 +8,7 @@ spring:
 gnews:
   url: https://gnews.io/api/v4
   api-key: ${API-KEY}
+
+springdoc:
+  api-docs:
+    path: /api-docs
